@@ -52,5 +52,5 @@ script:
   - env CGO_ENABLED=0 GOOS=plan9 GOARCH=386 go build -o ./src/weaviate_plan9_386 ./cmd/weaviate-server/main.go
   - env CGO_ENABLED=0 GOOS=plan9 GOARCH=amd64 go build -o ./src/weaviate_plan9_amd64 ./cmd/weaviate-server/main.go
   - env CGO_ENABLED=0 GOOS=solaris GOARCH=amd64 go build -o ./src/weaviate_solaris_amd64 ./cmd/weaviate-server/main.go
-  - env CGO_ENABLED=0 GOOS=windows GOARCH=386 go build -o ./src/weaviate_windows_386 ./cmd/weaviate-server/main.go
-  - env CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o ./src/weaviate_windows_amd64 ./cmd/weaviate-server/main.go
+  - env CGO_ENABLED=0 GOOS=windows GOARCH=386 go build -o ./src/weaviate_windows_386.exe ./cmd/weaviate-server/main.go
+  - env CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o ./src/weaviate_windows_amd64.exe ./cmd/weaviate-server/main.go
