@@ -1,6 +1,9 @@
 # TEMP: remove testing
 test
 
+# keys
+travis-ci_rsa.pub
+
 # Ignore OLD files
 *.OLD
 *.OLD.go
