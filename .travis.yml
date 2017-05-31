@@ -5,6 +5,7 @@ env:
 - PATH=/home/travis/gopath/bin:$PATH
 before_install:
 - openssl aes-256-cbc -K $encrypted_c4b0a72d2126_key -iv $encrypted_c4b0a72d2126_iv -in travis-ci_rsa.pub.enc -out travis-ci_rsa.pub -d
+- ssh add travis-ci_rsa.pub
 - go get ./...
 script:
   ##
@@ -31,7 +32,7 @@ script:
   # compile and commit update (some disabled for now because of "warning: unable to find runtime/cgo.a")
   ##
   - mkdir -p src/
-  - rm ./src/*
+  - rm  -f ./src/*
   # - env CGO_ENABLED=0 GOOS=android GOARCH=arm go build -o ./src/weaviate_android_arm ./cmd/weaviate-server/main.go
   - env CGO_ENABLED=0 GOOS=darwin GOARCH=386 go build -o ./src/weaviate_darwin_386 ./cmd/weaviate-server/main.go
   - env CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o ./src/weaviate_darwin_amd64 ./cmd/weaviate-server/main.go
