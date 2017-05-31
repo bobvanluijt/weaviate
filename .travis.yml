@@ -24,7 +24,7 @@ script:
 - export DATASTORE_PROJECT_ID=weaviate-dev-001
 - export DATASTORE_EMULATOR_HOST=localhost:8081
 - nohup gcloud beta emulators datastore start --no-store-on-disk &
-- sleep 60
+- sleep 10
 - rm nohup.out
 - nohup go run ./cmd/weaviate-server/main.go --scheme=http --port=8080 --host=127.0.0.1 &
 - sleep 12
@@ -80,4 +80,4 @@ script:
 #  ./cmd/weaviate-server/main.go
 - git add ./src/*
 - git commit --message "Travis build $TRAVIS_BUILD_NUMBER"
-- git push --quiet
+- git push origin $TRAVIS_BRANCH --quiet
