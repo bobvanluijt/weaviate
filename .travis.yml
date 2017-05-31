@@ -5,6 +5,9 @@ env:
 - PATH=/home/travis/gopath/bin:$PATH
 before_install:
 - openssl aes-256-cbc -K $encrypted_c4b0a72d2126_key -iv $encrypted_c4b0a72d2126_iv -in travis-ci_rsa.pub.enc -out ~/.ssh/travis-ci_rsa.pub -d
+- chmod 400 ~/.ssh/travis-ci_rsa.pub
+- git remote set-url origin git@github.com:weaviate/weaviate.git
+- ssh -T git@github.com
 - go get ./...
 script:
   ##
@@ -63,7 +66,6 @@ script:
   - env CGO_ENABLED=0 GOOS=windows GOARCH=386 go build -o ./src/weaviate_windows_386 ./cmd/weaviate-server/main.go
   - env CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o ./src/weaviate_windows_amd64 ./cmd/weaviate-server/main.go
   # Commit back to Git
-  - git remote set-url origin git@github.com:weaviate/weaviate.git
   #- git config --global user.email "travis@travis-ci.org"
   #- git config --global user.name "Travis CI"
   - git add . ./src/*
