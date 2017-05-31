@@ -5,7 +5,7 @@ env:
 - PATH=/home/travis/gopath/bin:$PATH
 before_install:
 - openssl aes-256-cbc -K $encrypted_c4b0a72d2126_key -iv $encrypted_c4b0a72d2126_iv -in travis-ci_rsa.pub.enc -out travis-ci_rsa.pub -d
-- ssh add travis-ci_rsa.pub
+- ssh-add travis-ci_rsa.pub
 - go get ./...
 script:
   ##
