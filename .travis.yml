@@ -63,8 +63,9 @@ script:
   - env CGO_ENABLED=0 GOOS=windows GOARCH=386 go build -o ./src/weaviate_windows_386 ./cmd/weaviate-server/main.go
   - env CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o ./src/weaviate_windows_amd64 ./cmd/weaviate-server/main.go
   # Commit back to Git
-  - git config --global user.email "travis@travis-ci.org"
-  - git config --global user.name "Travis CI"
+  - git remote set-url origin git@github.com:weaviate/weaviate.git
+  #- git config --global user.email "travis@travis-ci.org"
+  #- git config --global user.name "Travis CI"
   - git add . ./src/*
   - git commit --message "Travis build: $TRAVIS_BUILD_NUMBER"
   - git push --quiet
