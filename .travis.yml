@@ -2,72 +2,82 @@ language: go
 go:
 - 1.8
 env:
-- PATH=/home/travis/gopath/bin:$PATH
+  matrix:
+  - PATH=/home/travis/gopath/bin:$PATH
+  global:
+    secure: K9jqGMZjwGXbWdl8ta9DO2Dp5cwtrXefpNLffiKNttkr31Pa+3Rzv/o/DUS22MeavVk+qMgMC7zytMtIRCkbMiTe0qz2Qz1pqgDGv8gcLsL+rOg8QyXP1vRMxLB406i0gW0yOX/QMLabdPi+sXLoY/QpVeranU0pKTm53bBepfGxiJKRNWICP7l94qGdxJ3s1EL5gx/D3ALRJMpsZV2HrO2LtBeZkJfydYGQ9Ex3GVPxjl+pdBEt7CympZ2fvn5Mesr257EKAPYrED8VCt0TC143TdpWvsXmuyj02aeK6zoOcQnJDwhSobuGTOyRdTn7yRCloa2vJFFf67XaMMpu8URJgb7ZrG9Rs6a8dcI0nur0+HWYMCmOvmipsvNjSHSZLQPesTnrePwmtnGX3GDUKDuVgV3hXKeQ0fknlozebOYOL54QCDQ2iAgojFGYM7jRXg5Zh2SLv8VdP1Av5/SijoQZ2DRMw9Dm1SV4/qtnIePGKLHlQdMSbJTQpYlhdTScDqWlYI7eDKHN+8cjOCWQZGG+U5OeW8Y0G+DwwRltXwGFRYY0KzacUm2+bYPfIKy3Jgeo9S5Diswz7iS60bDt/cy5RdQiZE49Zdwn1Rn2lA73Bzjp7NJf2Fi4xoYEc0BV73RreAEKTYJJHV3zMUfkYS3tqd1Q3gEyXJ8EXS6RvcI=
 before_install:
-- openssl aes-256-cbc -K $encrypted_c4b0a72d2126_key -iv $encrypted_c4b0a72d2126_iv -in travis-ci_rsa.pub.enc -out ~/.ssh/travis-ci_rsa.pub -d
-- chmod 400 ~/.ssh/travis-ci_rsa.pub
-- git remote set-url origin git@github.com:weaviate/weaviate.git
-- ssh -T git@github.com
+- git config --global user.email "travis@travis-ci.org"
+- git config --global user.name "Travis CI"
+- git remote set-url origin https://${GH_TOKEN}@github.com/weaviate/weaviate.git
 - go get ./...
 script:
-  ##
-  # test based on datastore
-  ##
-  - if [ ! -d "$HOME/google-cloud-sdk/bin" ]; then rm -rf $HOME/google-cloud-sdk; export CLOUDSDK_CORE_DISABLE_PROMPTS=1; curl https://sdk.cloud.google.com | bash; fi
-  - source /home/travis/google-cloud-sdk/path.bash.inc
-  - export CLOUDSDK_CORE_PROJECT=weaviate-dev-001
-  - export DATASTORE_DATASET=weaviate-dev-001
-  - export DATASTORE_EMULATOR_HOST=127.0.0.1:8081
-  - export DATASTORE_EMULATOR_HOST_PATH=127.0.0.1:8081/datastore
-  - export DATASTORE_HOST=http://127.0.0.1:8081
-  - export DATASTORE_PROJECT_ID=weaviate-dev-001
-  - export DATASTORE_EMULATOR_HOST=localhost:8081
-  - nohup gcloud beta emulators datastore start --no-store-on-disk &
-  - sleep 60
-  - rm nohup.out
-  - nohup go run ./cmd/weaviate-server/main.go --scheme=http --port=8080 --host=127.0.0.1 &
-  - sleep 12
-  - export WEAVIATEKEY=$(grep "ROOTKEY=" nohup.out | cut -d "=" -f 2)
-  - go test -v ./test -args -api-key=$WEAVIATEKEY
-  - rm nohup.out
-  ##
-  # compile and commit update (some disabled for now because of "warning: unable to find runtime/cgo.a")
-  ##
-  - mkdir -p src/
-  - rm  -f ./src/*
-  # - env CGO_ENABLED=0 GOOS=android GOARCH=arm go build -o ./src/weaviate_android_arm ./cmd/weaviate-server/main.go
-  - env CGO_ENABLED=0 GOOS=darwin GOARCH=386 go build -o ./src/weaviate_darwin_386 ./cmd/weaviate-server/main.go
-  - env CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o ./src/weaviate_darwin_amd64 ./cmd/weaviate-server/main.go
-  # - env CGO_ENABLED=0 GOOS=darwin GOARCH=arm go build -o ./src/weaviate_darwin_arm ./cmd/weaviate-server/main.go
-  # - env CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -o ./src/weaviate_darwin_arm64 ./cmd/weaviate-server/main.go
-  # - env CGO_ENABLED=0 GOOS=dragonfly GOARCH=amd64 go build -o ./src/weaviate_dragonfly_amd64 ./cmd/weaviate-server/main.go
-  - env CGO_ENABLED=0 GOOS=freebsd GOARCH=386 go build -o ./src/weaviate_freebsd_386 ./cmd/weaviate-server/main.go
-  - env CGO_ENABLED=0 GOOS=freebsd GOARCH=amd64 go build -o ./src/weaviate_freebsd_amd64 ./cmd/weaviate-server/main.go
-  - env CGO_ENABLED=0 GOOS=freebsd GOARCH=arm go build -o ./src/weaviate_freebsd_arm ./cmd/weaviate-server/main.go
-  - env CGO_ENABLED=0 GOOS=linux GOARCH=386 go build -o ./src/weaviate_linux_386 ./cmd/weaviate-server/main.go
-  - env CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ./src/weaviate_linux_amd64 ./cmd/weaviate-server/main.go
-  - env CGO_ENABLED=0 GOOS=linux GOARCH=arm go build -o ./src/weaviate_linux_arm ./cmd/weaviate-server/main.go
-  - env CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o ./src/weaviate_linux_arm64 ./cmd/weaviate-server/main.go
-  - env CGO_ENABLED=0 GOOS=linux GOARCH=ppc64 go build -o ./src/weaviate_linux_ppc64 ./cmd/weaviate-server/main.go
-  - env CGO_ENABLED=0 GOOS=linux GOARCH=ppc64le go build -o ./src/weaviate_linux_ppc64le ./cmd/weaviate-server/main.go
-  - env CGO_ENABLED=0 GOOS=linux GOARCH=mips go build -o ./src/weaviate_linux_mips ./cmd/weaviate-server/main.go
-  - env CGO_ENABLED=0 GOOS=linux GOARCH=mipsle go build -o ./src/weaviate_linux_mipsle ./cmd/weaviate-server/main.go
-  - env CGO_ENABLED=0 GOOS=linux GOARCH=mips64 go build -o ./src/weaviate_linux_mips64 ./cmd/weaviate-server/main.go
-  - env CGO_ENABLED=0 GOOS=linux GOARCH=mips64le go build -o ./src/weaviate_linux_mips64le ./cmd/weaviate-server/main.go
-  - env CGO_ENABLED=0 GOOS=netbsd GOARCH=386 go build -o ./src/weaviate_netbsd_386 ./cmd/weaviate-server/main.go
-  - env CGO_ENABLED=0 GOOS=netbsd GOARCH=amd64 go build -o ./src/weaviate_netbsd_amd64 ./cmd/weaviate-server/main.go
-  - env CGO_ENABLED=0 GOOS=netbsd GOARCH=arm go build -o ./src/weaviate_netbsd_arm ./cmd/weaviate-server/main.go
-  - env CGO_ENABLED=0 GOOS=openbsd GOARCH=386 go build -o ./src/weaviate_openbsd_386 ./cmd/weaviate-server/main.go
-  - env CGO_ENABLED=0 GOOS=openbsd GOARCH=amd64 go build -o ./src/weaviate_openbsd_amd64 ./cmd/weaviate-server/main.go
-  - env CGO_ENABLED=0 GOOS=openbsd GOARCH=arm go build -o ./src/weaviate_openbsd_arm ./cmd/weaviate-server/main.go
-  - env CGO_ENABLED=0 GOOS=plan9 GOARCH=386 go build -o ./src/weaviate_plan9_386 ./cmd/weaviate-server/main.go
-  - env CGO_ENABLED=0 GOOS=plan9 GOARCH=amd64 go build -o ./src/weaviate_plan9_amd64 ./cmd/weaviate-server/main.go
-  - env CGO_ENABLED=0 GOOS=solaris GOARCH=amd64 go build -o ./src/weaviate_solaris_amd64 ./cmd/weaviate-server/main.go
-  - env CGO_ENABLED=0 GOOS=windows GOARCH=386 go build -o ./src/weaviate_windows_386 ./cmd/weaviate-server/main.go
-  - env CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o ./src/weaviate_windows_amd64 ./cmd/weaviate-server/main.go
-  # Commit back to Git
-  #- git config --global user.email "travis@travis-ci.org"
-  #- git config --global user.name "Travis CI"
-  - git add . ./src/*
-  - git commit --message "Travis build: $TRAVIS_BUILD_NUMBER"
-  - git push --quiet
+- if [ ! -d "$HOME/google-cloud-sdk/bin" ]; then rm -rf $HOME/google-cloud-sdk; export
+  CLOUDSDK_CORE_DISABLE_PROMPTS=1; curl https://sdk.cloud.google.com | bash; fi
+- source /home/travis/google-cloud-sdk/path.bash.inc
+- export CLOUDSDK_CORE_PROJECT=weaviate-dev-001
+- export DATASTORE_DATASET=weaviate-dev-001
+- export DATASTORE_EMULATOR_HOST=127.0.0.1:8081
+- export DATASTORE_EMULATOR_HOST_PATH=127.0.0.1:8081/datastore
+- export DATASTORE_HOST=http://127.0.0.1:8081
+- export DATASTORE_PROJECT_ID=weaviate-dev-001
+- export DATASTORE_EMULATOR_HOST=localhost:8081
+- nohup gcloud beta emulators datastore start --no-store-on-disk &
+- sleep 60
+- rm nohup.out
+- nohup go run ./cmd/weaviate-server/main.go --scheme=http --port=8080 --host=127.0.0.1
+  &
+- sleep 12
+- export WEAVIATEKEY=$(grep "ROOTKEY=" nohup.out | cut -d "=" -f 2)
+- go test -v ./test -args -api-key=$WEAVIATEKEY
+- rm nohup.out
+- mkdir -p src/
+- rm  -f ./src/*
+- env CGO_ENABLED=0 GOOS=darwin GOARCH=386 go build -o ./src/weaviate_darwin_386 ./cmd/weaviate-server/main.go
+- env CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o ./src/weaviate_darwin_amd64
+  ./cmd/weaviate-server/main.go
+- env CGO_ENABLED=0 GOOS=freebsd GOARCH=386 go build -o ./src/weaviate_freebsd_386
+  ./cmd/weaviate-server/main.go
+- env CGO_ENABLED=0 GOOS=freebsd GOARCH=amd64 go build -o ./src/weaviate_freebsd_amd64
+  ./cmd/weaviate-server/main.go
+- env CGO_ENABLED=0 GOOS=freebsd GOARCH=arm go build -o ./src/weaviate_freebsd_arm
+  ./cmd/weaviate-server/main.go
+- env CGO_ENABLED=0 GOOS=linux GOARCH=386 go build -o ./src/weaviate_linux_386 ./cmd/weaviate-server/main.go
+- env CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ./src/weaviate_linux_amd64
+  ./cmd/weaviate-server/main.go
+- env CGO_ENABLED=0 GOOS=linux GOARCH=arm go build -o ./src/weaviate_linux_arm ./cmd/weaviate-server/main.go
+- env CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o ./src/weaviate_linux_arm64
+  ./cmd/weaviate-server/main.go
+- env CGO_ENABLED=0 GOOS=linux GOARCH=ppc64 go build -o ./src/weaviate_linux_ppc64
+  ./cmd/weaviate-server/main.go
+- env CGO_ENABLED=0 GOOS=linux GOARCH=ppc64le go build -o ./src/weaviate_linux_ppc64le
+  ./cmd/weaviate-server/main.go
+- env CGO_ENABLED=0 GOOS=linux GOARCH=mips go build -o ./src/weaviate_linux_mips ./cmd/weaviate-server/main.go
+- env CGO_ENABLED=0 GOOS=linux GOARCH=mipsle go build -o ./src/weaviate_linux_mipsle
+  ./cmd/weaviate-server/main.go
+- env CGO_ENABLED=0 GOOS=linux GOARCH=mips64 go build -o ./src/weaviate_linux_mips64
+  ./cmd/weaviate-server/main.go
+- env CGO_ENABLED=0 GOOS=linux GOARCH=mips64le go build -o ./src/weaviate_linux_mips64le
+  ./cmd/weaviate-server/main.go
+- env CGO_ENABLED=0 GOOS=netbsd GOARCH=386 go build -o ./src/weaviate_netbsd_386 ./cmd/weaviate-server/main.go
+- env CGO_ENABLED=0 GOOS=netbsd GOARCH=amd64 go build -o ./src/weaviate_netbsd_amd64
+  ./cmd/weaviate-server/main.go
+- env CGO_ENABLED=0 GOOS=netbsd GOARCH=arm go build -o ./src/weaviate_netbsd_arm ./cmd/weaviate-server/main.go
+- env CGO_ENABLED=0 GOOS=openbsd GOARCH=386 go build -o ./src/weaviate_openbsd_386
+  ./cmd/weaviate-server/main.go
+- env CGO_ENABLED=0 GOOS=openbsd GOARCH=amd64 go build -o ./src/weaviate_openbsd_amd64
+  ./cmd/weaviate-server/main.go
+- env CGO_ENABLED=0 GOOS=openbsd GOARCH=arm go build -o ./src/weaviate_openbsd_arm
+  ./cmd/weaviate-server/main.go
+- env CGO_ENABLED=0 GOOS=plan9 GOARCH=386 go build -o ./src/weaviate_plan9_386 ./cmd/weaviate-server/main.go
+- env CGO_ENABLED=0 GOOS=plan9 GOARCH=amd64 go build -o ./src/weaviate_plan9_amd64
+  ./cmd/weaviate-server/main.go
+- env CGO_ENABLED=0 GOOS=solaris GOARCH=amd64 go build -o ./src/weaviate_solaris_amd64
+  ./cmd/weaviate-server/main.go
+- env CGO_ENABLED=0 GOOS=windows GOARCH=386 go build -o ./src/weaviate_windows_386
+  ./cmd/weaviate-server/main.go
+- env CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o ./src/weaviate_windows_amd64
+  ./cmd/weaviate-server/main.go
+- git add . ./src/*
+- git commit --message "Travis build: $TRAVIS_BUILD_NUMBER"
+- git push --quiet
