@@ -34,50 +34,50 @@ script:
 - rm nohup.out
 - mkdir -p bin/
 - rm  -f ./bin/*
-- env CGO_ENABLED=0 GOOS=darwin GOARCH=386 go build -o ./src/weaviate_darwin_386 ./cmd/weaviate-server/main.go
-- env CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o ./src/weaviate_darwin_amd64
+- env CGO_ENABLED=0 GOOS=darwin GOARCH=386 go build -o ./bin/weaviate_darwin_386 ./cmd/weaviate-server/main.go
+- env CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o ./bin/weaviate_darwin_amd64
   ./cmd/weaviate-server/main.go
-- env CGO_ENABLED=0 GOOS=freebsd GOARCH=386 go build -o ./src/weaviate_freebsd_386
+- env CGO_ENABLED=0 GOOS=freebsd GOARCH=386 go build -o ./bin/weaviate_freebsd_386
   ./cmd/weaviate-server/main.go
-- env CGO_ENABLED=0 GOOS=freebsd GOARCH=amd64 go build -o ./src/weaviate_freebsd_amd64
+- env CGO_ENABLED=0 GOOS=freebsd GOARCH=amd64 go build -o ./bin/weaviate_freebsd_amd64
   ./cmd/weaviate-server/main.go
-- env CGO_ENABLED=0 GOOS=freebsd GOARCH=arm go build -o ./src/weaviate_freebsd_arm
+- env CGO_ENABLED=0 GOOS=freebsd GOARCH=arm go build -o ./bin/weaviate_freebsd_arm
   ./cmd/weaviate-server/main.go
-- env CGO_ENABLED=0 GOOS=linux GOARCH=386 go build -o ./src/weaviate_linux_386 ./cmd/weaviate-server/main.go
-- env CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ./src/weaviate_linux_amd64
+- env CGO_ENABLED=0 GOOS=linux GOARCH=386 go build -o ./bin/weaviate_linux_386 ./cmd/weaviate-server/main.go
+- env CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ./bin/weaviate_linux_amd64
   ./cmd/weaviate-server/main.go
-- env CGO_ENABLED=0 GOOS=linux GOARCH=arm go build -o ./src/weaviate_linux_arm ./cmd/weaviate-server/main.go
-- env CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o ./src/weaviate_linux_arm64
+- env CGO_ENABLED=0 GOOS=linux GOARCH=arm go build -o ./bin/weaviate_linux_arm ./cmd/weaviate-server/main.go
+- env CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o ./bin/weaviate_linux_arm64
   ./cmd/weaviate-server/main.go
-- env CGO_ENABLED=0 GOOS=linux GOARCH=ppc64 go build -o ./src/weaviate_linux_ppc64
+- env CGO_ENABLED=0 GOOS=linux GOARCH=ppc64 go build -o ./bin/weaviate_linux_ppc64
   ./cmd/weaviate-server/main.go
-- env CGO_ENABLED=0 GOOS=linux GOARCH=ppc64le go build -o ./src/weaviate_linux_ppc64le
+- env CGO_ENABLED=0 GOOS=linux GOARCH=ppc64le go build -o ./bin/weaviate_linux_ppc64le
   ./cmd/weaviate-server/main.go
-- env CGO_ENABLED=0 GOOS=linux GOARCH=mips go build -o ./src/weaviate_linux_mips ./cmd/weaviate-server/main.go
-- env CGO_ENABLED=0 GOOS=linux GOARCH=mipsle go build -o ./src/weaviate_linux_mipsle
+- env CGO_ENABLED=0 GOOS=linux GOARCH=mips go build -o ./bin/weaviate_linux_mips ./cmd/weaviate-server/main.go
+- env CGO_ENABLED=0 GOOS=linux GOARCH=mipsle go build -o ./bin/weaviate_linux_mipsle
   ./cmd/weaviate-server/main.go
-- env CGO_ENABLED=0 GOOS=linux GOARCH=mips64 go build -o ./src/weaviate_linux_mips64
+- env CGO_ENABLED=0 GOOS=linux GOARCH=mips64 go build -o ./bin/weaviate_linux_mips64
   ./cmd/weaviate-server/main.go
-- env CGO_ENABLED=0 GOOS=linux GOARCH=mips64le go build -o ./src/weaviate_linux_mips64le
+- env CGO_ENABLED=0 GOOS=linux GOARCH=mips64le go build -o ./bin/weaviate_linux_mips64le
   ./cmd/weaviate-server/main.go
-- env CGO_ENABLED=0 GOOS=netbsd GOARCH=386 go build -o ./src/weaviate_netbsd_386 ./cmd/weaviate-server/main.go
-- env CGO_ENABLED=0 GOOS=netbsd GOARCH=amd64 go build -o ./src/weaviate_netbsd_amd64
+- env CGO_ENABLED=0 GOOS=netbsd GOARCH=386 go build -o ./bin/weaviate_netbsd_386 ./cmd/weaviate-server/main.go
+- env CGO_ENABLED=0 GOOS=netbsd GOARCH=amd64 go build -o ./bin/weaviate_netbsd_amd64
   ./cmd/weaviate-server/main.go
-- env CGO_ENABLED=0 GOOS=netbsd GOARCH=arm go build -o ./src/weaviate_netbsd_arm ./cmd/weaviate-server/main.go
-- env CGO_ENABLED=0 GOOS=openbsd GOARCH=386 go build -o ./src/weaviate_openbsd_386
+- env CGO_ENABLED=0 GOOS=netbsd GOARCH=arm go build -o ./bin/weaviate_netbsd_arm ./cmd/weaviate-server/main.go
+- env CGO_ENABLED=0 GOOS=openbsd GOARCH=386 go build -o ./bin/weaviate_openbsd_386
   ./cmd/weaviate-server/main.go
-- env CGO_ENABLED=0 GOOS=openbsd GOARCH=amd64 go build -o ./src/weaviate_openbsd_amd64
+- env CGO_ENABLED=0 GOOS=openbsd GOARCH=amd64 go build -o ./bin/weaviate_openbsd_amd64
   ./cmd/weaviate-server/main.go
-- env CGO_ENABLED=0 GOOS=openbsd GOARCH=arm go build -o ./src/weaviate_openbsd_arm
+- env CGO_ENABLED=0 GOOS=openbsd GOARCH=arm go build -o ./bin/weaviate_openbsd_arm
   ./cmd/weaviate-server/main.go
-- env CGO_ENABLED=0 GOOS=plan9 GOARCH=386 go build -o ./src/weaviate_plan9_386 ./cmd/weaviate-server/main.go
-- env CGO_ENABLED=0 GOOS=plan9 GOARCH=amd64 go build -o ./src/weaviate_plan9_amd64
+- env CGO_ENABLED=0 GOOS=plan9 GOARCH=386 go build -o ./bin/weaviate_plan9_386 ./cmd/weaviate-server/main.go
+- env CGO_ENABLED=0 GOOS=plan9 GOARCH=amd64 go build -o ./bin/weaviate_plan9_amd64
   ./cmd/weaviate-server/main.go
-- env CGO_ENABLED=0 GOOS=solaris GOARCH=amd64 go build -o ./src/weaviate_solaris_amd64
+- env CGO_ENABLED=0 GOOS=solaris GOARCH=amd64 go build -o ./bin/weaviate_solaris_amd64
   ./cmd/weaviate-server/main.go
-- env CGO_ENABLED=0 GOOS=windows GOARCH=386 go build -o ./src/weaviate_windows_386
+- env CGO_ENABLED=0 GOOS=windows GOARCH=386 go build -o ./bin/weaviate_windows_386
   ./cmd/weaviate-server/main.go
-- env CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o ./src/weaviate_windows_amd64
+- env CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o ./bin/weaviate_windows_amd64
   ./cmd/weaviate-server/main.go
 - git add ./bin/*
 - git commit --message "Travis build $TRAVIS_BUILD_NUMBER"
